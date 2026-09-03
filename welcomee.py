@@ -441,7 +441,7 @@ async def ticketpanel(ctx):
 
 
 # =========================
-# ADVANCED MODERATION COMMANDS
+# ADVANCED MODERATION COMMANDS (with #bot-command check)
 # =========================
 
 
@@ -450,6 +450,10 @@ async def ticketpanel(ctx):
 async def timeout(
     ctx, member: discord.Member, duration: str, *, reason="Belirtilmedi"
 ):
+  if ctx.channel.name != "bot-command":
+    await ctx.send("⚠️ Bu komut yalnızca `#bot-command` kanalında kullanılabilir!")
+    return
+
   if member.guild.owner == member or member.guild_permissions.administrator:
     await ctx.send(
         "❌ Bu kullanıcı Sunucu Sahibi veya Yönetici olduğu için"
@@ -484,6 +488,10 @@ async def timeout(
 @bot.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, member: discord.Member, *, reason="Belirtilmedi"):
+  if ctx.channel.name != "bot-command":
+    await ctx.send("⚠️ Bu komut yalnızca `#bot-command` kanalında kullanılabilir!")
+    return
+
   if member.guild.owner == member or member.guild_permissions.administrator:
     await ctx.send(
         "❌ Bu kullanıcı Sunucu Sahibi veya Yönetici olduğu için banlanamaz!"
@@ -505,6 +513,10 @@ async def ban(ctx, member: discord.Member, *, reason="Belirtilmedi"):
 @bot.command()
 @commands.has_permissions(ban_members=True)
 async def unban(ctx, user_id: int, *, reason="Belirtilmedi"):
+  if ctx.channel.name != "bot-command":
+    await ctx.send("⚠️ Bu komut yalnızca `#bot-command` kanalında kullanılabilir!")
+    return
+
   try:
     user = await bot.fetch_user(user_id)
     await ctx.guild.unban(user, reason=reason)
@@ -531,4 +543,5 @@ if __name__ == "__main__":
   logger.info("Bot ve Flask sunucusu başlatılıyor...")
   keep_alive()
   bot.run(os.getenv("DISCORD_TOKEN"))
+
     
